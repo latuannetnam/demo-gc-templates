@@ -1,4 +1,4 @@
-{% for server in config_context['ntp'] %}
+{% for server in config_context.get('ntp', []) %}
 {% if server['prefer'] %}
 ntp server {{ server['ip'] }} prefer
 {% else %}

@@ -1,10 +1,10 @@
-router bgp {{ config_context["bgp"]["asn"] }}
-   router-id {{ config_context["bgp"]["rid"] }}
-{% for neighbor in config_context["bgp"]["neighbors"] %}
+router bgp {{ config_context.get("bgp", {}).get("asn") }}
+   router-id {{ config_context.get("bgp", {}).get("rid") }}
+{% for neighbor in config_context.get("bgp", {}).get("neighbors", []) %}
    neighbor {{ neighbor["ip"] }} remote-as {{ neighbor["remote-asn"] }}
    neighbor {{ neighbor["ip"] }} maximum-routes 12000
 {% endfor %}
-{% if config_context["bgp"]["redistribute"]|length > 0 %}
-   redistribute {{ config_context["bgp"]["redistribute"]|join(' ') }}
+{% if config_context.get("bgp", {}).get("redistribute", [])|length > 0 %}
+   redistribute {{ config_context.get("bgp", {}).get("redistribute", [])|join(' ') }}
 {% endif %}
 

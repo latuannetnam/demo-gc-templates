@@ -1,9 +1,9 @@
-{% for community in config_context["snmp"]["community"] %}
-snmp-server community {{ community["name"] }} {{ community["role"] }}
+{% for community in config_context.get("snmp", {}).get("community", []) %}
+snmp-server community {{ community.get("name", "") }} {{ community.get("role", "") }}
 {% endfor %}
-snmp-server location {{ config_context["snmp"]["location"] }}
-snmp-server contact {{ config_context["snmp"]["contact"] }}
-{% for host in config_context["snmp"]["host"] %}
-snmp-server host {{ host["ip"] }} version {{ host["version"] }} {{ host["community"] }} 
+snmp-server location {{ config_context.get("snmp", {}).get("location", "") }}
+snmp-server contact {{ config_context.get("snmp", {}).get("contact", "") }}
+{% for host in config_context.get("snmp", {}).get("host", []) %}
+snmp-server host {{ host.get("ip", "") }} version {{ host.get("version", "") }} {{ host.get("community", "") }} 
 {% endfor %}
 

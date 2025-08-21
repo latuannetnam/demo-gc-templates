@@ -25,7 +25,7 @@ vrf definition MANAGEMENT
 !
 logging userinfo
 !
-{% if config_context["aaa-new-model"] == false %}
+{% if config_context.get("aaa-new-model") == false %}
 no aaa new-model
 {% else %}
 aaa new-model
@@ -175,10 +175,10 @@ redundancy
 !
 !
 !
-{% if config_context["lldp"] == true %}
+{% if config_context.get("lldp") == true %}
 lldp run
 {% endif %}
-{% if config_context["cdp"] == true %}
+{% if config_context.get("cdp") == true %}
 cdp run
 {% endif %}
 !
@@ -200,7 +200,7 @@ cdp run
 !
 !
 {% include './ios/interfaces.j2' %}
-{% if config_context["bgp"] is defined %}
+{% if config_context.get("bgp") is defined %}
 {% include './ios/bgp.j2' %}
 {% endif %}
 !
@@ -212,9 +212,9 @@ no ip http server
 ip http authentication local
 no ip http secure-server
 !
-{% if config_context["routes"] is defined %}
-{% if config_context["routes"]["static"] is defined %}
-{% for static in config_context["routes"]["static"] %}
+{% if config_context.get("routes") is defined %}
+{% if config_context.get("routes", {}).get("static") is defined %}
+{% for static in config_context.get("routes", {}).get("static", []) %}
 {{ static }}
 {% endfor %}
 {% endif %}

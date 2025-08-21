@@ -11,10 +11,10 @@ interface {{ interface["name"] }}
 {% else %}
  no ip address
 {% endif %}
-{% if config_context["acl"] is defined %}
-{% if config_context["acl"]["interfaces"] is defined %}
-{% if config_context["acl"]["interfaces"][interface["name"]] is defined %}
- ip access-group {{ config_context["acl"]["interfaces"][interface["name"]]["acl"] }} {{ config_context["acl"]["interfaces"][interface["name"]]["direction"] }}
+{% if config_context.get("acl") is defined %}
+{% if config_context.get("acl", {}).get("interfaces") is defined %}
+{% if config_context.get("acl", {}).get("interfaces", {}).get(interface["name"]) is defined %}
+ ip access-group {{ config_context.get("acl", {}).get("interfaces", {}).get(interface["name"], {}).get("acl") }} {{ config_context.get("acl", {}).get("interfaces", {}).get(interface["name"], {}).get("direction") }}
 {% endif %}
 {% endif %}
 {% endif %}

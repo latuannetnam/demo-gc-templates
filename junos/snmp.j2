@@ -1,6 +1,7 @@
+
 set snmp view system-include oid .1 include
-{% for community in config_context["snmp"] %}
-set snmp community {{ community["name"] }} view system-include
-set snmp community {{ community["name"] }} authorization {{ community["role"] }}
+{% for community in config_context.get("snmp", []) %}
+set snmp community {{ community.get("name", "") }} view system-include
+set snmp community {{ community.get("name", "") }} authorization {{ community.get("role", "") }}
 {% endfor %}
 

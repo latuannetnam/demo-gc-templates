@@ -1,5 +1,5 @@
 {% if config_context.get("acl", {}).get("definitions", {}).get("named", {}) %}
-{% for name, definition in config_context["acl"]["definitions"]["named"].items() %}
+{% for name, definition in config_context.get("acl", {}).get("definitions", {}).get("named", {}).items() %}
 ip access-list {{ name }}
 {% for entry in definition %}
   {{ entry }}
