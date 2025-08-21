@@ -86,13 +86,13 @@ logging level lldp 4
 {% if config_context.get("acl") %}
 {% include "./nxos/acl.j2" %}
 {% endif %}
-copp profile {{ config_context["copp-profile"] }}
+copp profile {{ config_context.get("copp-profile") }}
 {% include './nxos/snmp.j2' %}
 {% include './nxos/ntp.j2' %}
 
-{% if config_context["routes"] is defined %}
-{% if config_context["routes"]["static"] is defined %}
-{% for static in config_context["routes"]["static"] %}
+{% if config_context.get("routes") %}
+{% if config_context.get("routes", {}).get("static") %}
+{% for static in config_context.get("routes", {}).get("static", []) %}
 {{ static }}
 {% endfor %}
 {% endif %}
@@ -101,10 +101,10 @@ copp profile {{ config_context["copp-profile"] }}
 vlan {{ vlans_merged_list }}
 {% endif %}
 {% include './nxos/vlans.j2' %}
-{% if config_context["route-maps"] is defined %}
-{% for name, details in config_context["route-maps"].items() %}
-route-map {{ name }} {{ details["type"] }} {{ details["seq"] }}
-{% for entry in details["statements"] %}
+{% if config_context.get("route-maps") %}
+{% for name, details in config_context.get("route-maps", {}).items() %}
+route-map {{ name }} {{ details.get("type") }} {{ details.get("seq") }}
+{% for entry in details.get("statements", []) %}
   {{ entry }}
 {% endfor %}
 {% endfor %}
@@ -118,7 +118,7 @@ nxapi ssl protocols TLSv1
 
 {% include "./nxos/interfaces.j2" %}
 {% include "./nxos/console_vty.j2" %}
-{% if config_context["bgp"] is defined %}
+{% if config_context.get("bgp") %}
 {% include './nxos/bgp.j2' %}
 {% endif %}
 

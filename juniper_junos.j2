@@ -14,7 +14,7 @@ set chassis fpc 0 lite-mode
 {% if config_context.get("bgp") %}
 {% include './junos/bgp.j2' %}
 {% endif %}
-{% if config_context["lldp"] == true %}
+{% if config_context.get('lldp') == true %}
 set protocols lldp transmit-delay 5
 set protocols lldp port-id-subtype interface-name
 set protocols lldp interface all
