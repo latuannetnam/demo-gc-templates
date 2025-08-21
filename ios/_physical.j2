@@ -1,11 +1,11 @@
 interface {{ interface["name"] }}
-{% if interface["description"] | length > 1 %}
+{% if interface["description"] is defined and (interface["description"] | trim) != "" %}
  description {{ interface["description"] }}
 {% endif %}
 {% if interface["ip_addresses"] | length > 0 %}
 {% for addr in interface["ip_addresses"] %}
 {% if addr["address"] is defined %}
- ip address {{ addr["address"] | ipaddress_interface("with_netmask") | replace('/', ' ') }}
+ ip address {{ addr["address"] | ipaddress_interface("with_netmask") }}
 {% endif %}
 {% endfor %}
 {% else %}
@@ -21,8 +21,7 @@ interface {{ interface["name"] }}
 {% if interface["enabled"] == false %}
  shutdown
 {% endif %}
- negotiation auto
- no mop enabled
- no mop sysid
+speed auto
+duplex auto
 !
 
