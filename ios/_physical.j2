@@ -5,7 +5,7 @@ interface {{ interface["name"] }}
 {% if interface["ip_addresses"] | length > 0 %}
 {% for addr in interface["ip_addresses"] %}
 {% if addr["address"] is defined %}
- ip address {{ addr["address"] | ipaddress_interface("with_netmask") }}
+ ip address {{ addr["address"] | ipaddress_interface("with_netmask") | replace('/', ' ') }}
 {% endif %}
 {% endfor %}
 {% else %}
@@ -14,7 +14,7 @@ interface {{ interface["name"] }}
 {% if interface["enabled"] == false %}
  shutdown
 {% endif %}
-speed auto
-duplex auto
+ speed auto
+ duplex auto
 !
 
