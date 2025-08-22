@@ -8,10 +8,8 @@ interface {{ interface["name"] }}
  ip address {{ addr["address"] | ipaddress_interface("with_netmask") | replace('/', ' ') }}
 {% endif %}
 {% endfor %}
- no ip route-cache
 {% else %}
  no ip address
- no ip route-cache
 {% endif %}
 {% if interface["enabled"] == false %}
  shutdown
@@ -19,13 +17,21 @@ interface {{ interface["name"] }}
 {% if interface["duplex"] is defined %}
 {% if interface["duplex"] == "full" %}
  full-duplex
+{% elif interface["duplex"] == "auto" %}
+ duplex auto
 {% else %}
  duplex {{ interface["duplex"] }}
 {% endif %}
-{% else %}
- duplex auto
 {% endif %}
+{% if interface["speed"] is defined %}
+{% if interface["speed"] == "auto" %}
  speed auto
+{% else %}
+ speed {{ interface["speed"] }}
+{% endif %}
+{% else %}
+ speed auto
+{% endif %}
 {% if interface["mop_enabled"] is defined and interface["mop_enabled"] == false %}
  no mop enabled
 {% endif %}
