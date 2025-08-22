@@ -8,8 +8,6 @@ interface {{ interface["name"] }}
  ip address {{ addr["address"] | ipaddress_interface("with_netmask") | replace('/', ' ') }}
 {% endif %}
 {% endfor %}
-{% else %}
- no ip address
 {% endif %}
 {% if interface["enabled"] == false %}
  shutdown
