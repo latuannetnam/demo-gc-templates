@@ -1,9 +1,9 @@
 {#- Services Configuration Partial -#}
-{%- if config_context.services or not config_context.services %}
+{%- if config_context.get('services') or not config_context.get('services') %}
     services {
         ssh;
-{%- if config_context.services %}
-{%- for service in config_context.services %}
+{%- if config_context.get('services') %}
+{%- for service in config_context.get('services') %}
         {{ service }};
 {%- endfor %}
 {%- endif %}

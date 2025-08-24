@@ -14,9 +14,9 @@ routing-options {
     }
 {%- endif %}
 {%- if config_context.get('routing_options', {}).get('autonomous_system') %}
-    autonomous-system {{ config_context.routing_options.autonomous_system }};
+    autonomous-system {{ config_context.get('routing_options', {}).get('autonomous_system') }};
 {%- endif %}
 {%- if config_context.get('routing_options', {}).get('router_id') %}
-    router-id {{ config_context.routing_options.router_id }};
+    router-id {{ config_context.get('routing_options', {}).get('router_id') }};
 {%- endif %}
 }

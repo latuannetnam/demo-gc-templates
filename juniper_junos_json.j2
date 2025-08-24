@@ -1,5 +1,5 @@
 ## Last commit: 2025-08-24 08:56:52 UTC by admin
-version {{ config_context.version | default('24.2R1-S2.5') }};
+version {{ config_context.get('version', '24.2R1-S2.5') }};
 {% include './junos_json/_system.j2' %}
 {%- if config_context.get('chassis') or config_context.get('auto_image_upgrade') %}
 {% include './junos_json/_chassis.j2' %}

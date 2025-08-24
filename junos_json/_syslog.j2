@@ -1,8 +1,8 @@
 {#- Syslog Configuration Partial -#}
-{%- if config_context.syslog or not config_context.syslog %}
+{%- if config_context.get('syslog') or not config_context.get('syslog') %}
     syslog {
-{%- if config_context.syslog and config_context.syslog.files %}
-{%- for file in config_context.syslog.files %}
+{%- if config_context.get('syslog') and config_context.get('syslog', {}).get('files') %}
+{%- for file in config_context.get('syslog', {}).get('files', []) %}
         file {{ file.name }} {
 {%- for facility in file.facilities %}
             {{ facility.facility }} {{ facility.level }};

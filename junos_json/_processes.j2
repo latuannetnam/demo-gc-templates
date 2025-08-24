@@ -1,7 +1,7 @@
 {#- Processes Configuration Partial -#}
-{%- if config_context.processes %}
+{%- if config_context.get('processes') %}
     processes {
-{%- for process_name, process_config in config_context.processes.items() %}
+{%- for process_name, process_config in config_context.get('processes', {}).items() %}
         {{ process_name }} {
 {%- if process_config.traceoptions %}
             traceoptions {

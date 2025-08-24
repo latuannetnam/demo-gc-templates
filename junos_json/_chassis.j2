@@ -3,7 +3,7 @@ chassis {
     auto-image-upgrade;
 {%- endif %}
 {%- if config_context.get('chassis', {}).get('other_settings') %}
-{%- for setting in config_context.chassis.other_settings %}
+{%- for setting in config_context.get('chassis', {}).get('other_settings', []) %}
     {{ setting }};
 {%- endfor %}
 {%- endif %}

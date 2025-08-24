@@ -1,12 +1,12 @@
 {#- Authentication Configuration Partial -#}
-{%- if config_context.root_authentication or config_context.users %}
+{%- if config_context.get('root_authentication') or config_context.get('users') %}
     root-authentication {
-        encrypted-password "{{ config_context.root_authentication.encrypted_password | default('$6$/W58L.AC$TNhEXPatGvT9J5UaMx9k/6Yc/2mvLILQgLRwjytphOFFeVHuX5UrPQlUxNPU8cgzWP/NV95RsE4SI/vCpUP5S1') }}";
+        encrypted-password "{{ config_context.get('root_authentication', {}).get('encrypted_password', '') }}";
     }
 {%- endif %}
-{%- if config_context.users or config_context.login %}
+{%- if config_context.get('users') or config_context.get('login') %}
     login {
-{%- for user in config_context.users | default([{'name': 'admin', 'uid': 2000, 'class': 'super-user', 'encrypted_password': '$6$HpfB9N/q$TsnOU69fgDoH0selFOCJ6S/VhKXX6RdfYxr7TOtufDHColTaAT71ji9ReQKOB4mlHMySDpUWlzArR1qfgclPZ/'}]) %}
+{%- for user in config_context.get('users', [{'name': 'admin', 'uid': 2000, 'class': 'super-user', 'encrypted_password': ''}]) %}
         user {{ user.name }} {
             uid {{ user.uid }};
             class {{ user.class }};
