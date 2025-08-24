@@ -1,10 +1,10 @@
 chassis {
-{%- if config_context.get('chassis', {}).get('auto_image_upgrade') or config_context.get('auto_image_upgrade') %}
+{% if config_context.get('chassis', {}).get('auto_image_upgrade') or config_context.get('auto_image_upgrade') %}
     auto-image-upgrade;
-{%- endif %}
-{%- if config_context.get('chassis', {}).get('other_settings') %}
-{%- for setting in config_context.get('chassis', {}).get('other_settings', []) %}
+{% endif %}
+{% if config_context.get('chassis', {}).get('other_settings') %}
+{% for setting in config_context.get('chassis', {}).get('other_settings', []) %}
     {{ setting }};
-{%- endfor %}
-{%- endif %}
+{% endfor %}
+{% endif %}
 }

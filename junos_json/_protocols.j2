@@ -1,67 +1,67 @@
 protocols {
-{%- if config_context.get('protocols', {}).get('router_advertisement') or config_context.get('protocols', {}).get('ipv6_router_advertisements') %}
+{% if config_context.get('protocols', {}).get('router_advertisement') or config_context.get('protocols', {}).get('ipv6_router_advertisements') %}
     router-advertisement {
-{%- for interface_name, ra_config in config_context.get('protocols', {}).get('router_advertisement', {}).items() %}
+{% for interface_name, ra_config in config_context.get('protocols', {}).get('router_advertisement', {}).items() %}
         interface {{ interface_name }} {
-{%- if ra_config.get('managed_configuration') %}
+{% if ra_config.get('managed_configuration') %}
             managed-configuration;
-{%- endif %}
-{%- if ra_config.get('other_stateful_configuration') %}
+{% endif %}
+{% if ra_config.get('other_stateful_configuration') %}
             other-stateful-configuration;
-{%- endif %}
-{%- if ra_config.get('max_advertisement_interval') %}
+{% endif %}
+{% if ra_config.get('max_advertisement_interval') %}
             max-advertisement-interval {{ ra_config.max_advertisement_interval }};
-{%- endif %}
+{% endif %}
         }
-{%- endfor %}
-{%- if not config_context.get('protocols', {}).get('router_advertisement') %}
+{% endfor %}
+{% if not config_context.get('protocols', {}).get('router_advertisement') %}
         interface fxp0.0 {
             managed-configuration;
         }
-{%- endif %}
+{% endif %}
     }
-{%- else %}
+{% else %}
     router-advertisement {
         interface fxp0.0 {
             managed-configuration;
         }
     }
-{%- endif %}
-{%- if config_context.get('protocols', {}).get('bgp') %}
+{% endif %}
+{% if config_context.get('protocols', {}).get('bgp') %}
     bgp {
-{%- for neighbor in config_context.get('protocols', {}).get('bgp', {}).get('neighbors', []) %}
+{% for neighbor in config_context.get('protocols', {}).get('bgp', {}).get('neighbors', []) %}
         neighbor {{ neighbor.address }} {
             peer-as {{ neighbor.peer_as }};
-{%- if neighbor.description %}
+{% if neighbor.description %}
             description "{{ neighbor.description }}";
-{%- endif %}
+{% endif %}
         }
-{%- endfor %}
+{% endfor %}
     }
-{%- endif %}
-{%- if config_context.get('protocols', {}).get('ospf') %}
+{% endif %}
+{% if config_context.get('protocols', {}).get('ospf') %}
     ospf {
-{%- for area_id, area_config in config_context.get('protocols', {}).get('ospf', {}).get('areas', {}).items() %}
+{% for area_id, area_config in config_context.get('protocols', {}).get('ospf', {}).get('areas', {}).items() %}
         area {{ area_id }} {
-{%- for interface in area_config.interfaces %}
+{% for interface in area_config.interfaces %}
             interface {{ interface.name }} {
-{%- if interface.metric %}
+{% if interface.metric %}
                 metric {{ interface.metric }};
-{%- endif %}
-{%- if interface.hello_interval %}
+{% endif %}
+{% if interface.hello_interval %}
                 hello-interval {{ interface.hello_interval }};
-{%- endif %}
+{% endif %}
             }
-{%- endfor %}
+{% endfor %}
         }
-{%- endfor %}
+{% endfor %}
     }
-{%- endif %}
-{%- if config_context.get('protocols', {}).get('lldp') %}
+{% endif %}
+{% if config_context.get('protocols', {}).get('lldp') %}
     lldp {
-{%- for interface in config_context.get('protocols', {}).get('lldp', {}).get('interfaces', []) %}
+{% for interface in config_context.get('protocols', {}).get('lldp', {}).get('interfaces', []) %}
         interface {{ interface }};
-{%- endfor %}
+{% endfor %}
     }
-{%- endif %}
+{% endif %}
 }

@@ -1,25 +1,25 @@
 {#- Processes Configuration Partial -#}
-{%- if config_context.get('processes') %}
+{% if config_context.get('processes') %}
     processes {
-{%- for process_name, process_config in config_context.get('processes', {}).items() %}
+{% for process_name, process_config in config_context.get('processes', {}).items() %}
         {{ process_name }} {
-{%- if process_config.traceoptions %}
+{% if process_config.traceoptions %}
             traceoptions {
-{%- if process_config.traceoptions.file %}
+{% if process_config.traceoptions.file %}
                 file {{ process_config.traceoptions.file }}{% if process_config.traceoptions.file_size %} size {{ process_config.traceoptions.file_size }}{% endif %};
-{%- endif %}
-{%- if process_config.traceoptions.level %}
+{% endif %}
+{% if process_config.traceoptions.level %}
                 level {{ process_config.traceoptions.level }};
-{%- endif %}
-{%- if process_config.traceoptions.flag %}
+{% endif %}
+{% if process_config.traceoptions.flag %}
                 flag {{ process_config.traceoptions.flag }};
-{%- endif %}
+{% endif %}
             }
-{%- endif %}
+{% endif %}
         }
-{%- endfor %}
+{% endfor %}
     }
-{%- else %}
+{% else %}
     processes {
         dhcp-service {
             traceoptions {
