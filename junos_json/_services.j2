@@ -1,0 +1,11 @@
+{#- Services Configuration Partial -#}
+{%- if config_context.services or not config_context.services %}
+    services {
+        ssh;
+{%- if config_context.services %}
+{%- for service in config_context.services %}
+        {{ service }};
+{%- endfor %}
+{%- endif %}
+    }
+{%- endif %}

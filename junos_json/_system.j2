@@ -1,0 +1,8 @@
+{#- System Configuration Module for JunOS -#}
+system {
+{%- include './junos_json/_hostname.j2' %}
+{%- include './junos_json/_authentication.j2' %}
+{%- include './junos_json/_services.j2' %}
+{%- include './junos_json/_syslog.j2' %}
+{%- include './junos_json/_processes.j2' %}
+}

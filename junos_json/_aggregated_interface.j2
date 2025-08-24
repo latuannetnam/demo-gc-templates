@@ -1,0 +1,25 @@
+{#- Aggregated Interface Configuration Partial -#}
+    {{ interface.name }} {
+{%- if interface.description %}
+        description "{{ interface.description }}";
+{%- endif %}
+{%- if not interface.enabled %}
+        disable;
+{%- endif %}
+{%- if interface.aggregation_group %}
+        aggregated-ether-options {
+            lacp {
+                active;
+            }
+        }
+{%- endif %}
+{%- if interface.ip_addresses and interface.ip_addresses|length > 0 %}
+        unit 0 {
+            family inet {
+{%- for ip in interface.ip_addresses %}
+                address {{ ip.address }};
+{%- endfor %}
+            }
+        }
+{%- endif %}
+    }

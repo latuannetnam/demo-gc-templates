@@ -1,0 +1,32 @@
+{#- Processes Configuration Partial -#}
+{%- if config_context.processes %}
+    processes {
+{%- for process_name, process_config in config_context.processes.items() %}
+        {{ process_name }} {
+{%- if process_config.traceoptions %}
+            traceoptions {
+{%- if process_config.traceoptions.file %}
+                file {{ process_config.traceoptions.file }}{% if process_config.traceoptions.file_size %} size {{ process_config.traceoptions.file_size }}{% endif %};
+{%- endif %}
+{%- if process_config.traceoptions.level %}
+                level {{ process_config.traceoptions.level }};
+{%- endif %}
+{%- if process_config.traceoptions.flag %}
+                flag {{ process_config.traceoptions.flag }};
+{%- endif %}
+            }
+{%- endif %}
+        }
+{%- endfor %}
+    }
+{%- else %}
+    processes {
+        dhcp-service {
+            traceoptions {
+                file dhcp_logfile size 10m;
+                level all;
+                flag packet;
+            }
+        }
+    }
+{%- endif %}

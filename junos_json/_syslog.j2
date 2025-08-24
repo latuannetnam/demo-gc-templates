@@ -1,0 +1,22 @@
+{#- Syslog Configuration Partial -#}
+{%- if config_context.syslog or not config_context.syslog %}
+    syslog {
+{%- if config_context.syslog and config_context.syslog.files %}
+{%- for file in config_context.syslog.files %}
+        file {{ file.name }} {
+{%- for facility in file.facilities %}
+            {{ facility.facility }} {{ facility.level }};
+{%- endfor %}
+        }
+{%- endfor %}
+{%- else %}
+        file interactive-commands {
+            interactive-commands any;
+        }
+        file messages {
+            any notice;
+            authorization info;
+        }
+{%- endif %}
+    }
+{%- endif %}

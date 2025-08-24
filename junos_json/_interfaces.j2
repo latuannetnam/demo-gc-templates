@@ -1,0 +1,17 @@
+interfaces {
+{%- for interface in interfaces %}
+{%- if interface.name.startswith('ge-') or interface.name.startswith('xe-') or interface.name.startswith('et-') %}
+{% include './junos_json/_physical_interface.j2' %}
+{%- elif interface.name.startswith('fxp') %}
+{% include './junos_json/_management_interface.j2' %}
+{%- elif interface.name.startswith('lo') %}
+{% include './junos_json/_loopback_interface.j2' %}
+{%- elif interface.name.startswith('ae') %}
+{% include './junos_json/_aggregated_interface.j2' %}
+{%- elif interface.name.startswith('vlan') %}
+{% include './junos_json/_vlan_interface.j2' %}
+{%- else %}
+{% include './junos_json/_physical_interface.j2' %}
+{%- endif %}
+{%- endfor %}
+}

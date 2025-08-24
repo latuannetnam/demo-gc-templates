@@ -1,0 +1,67 @@
+protocols {
+{%- if config_context.get('protocols', {}).get('router_advertisement') or config_context.get('protocols', {}).get('ipv6_router_advertisements') %}
+    router-advertisement {
+{%- for interface_name, ra_config in config_context.get('protocols', {}).get('router_advertisement', {}).items() %}
+        interface {{ interface_name }} {
+{%- if ra_config.get('managed_configuration') %}
+            managed-configuration;
+{%- endif %}
+{%- if ra_config.get('other_stateful_configuration') %}
+            other-stateful-configuration;
+{%- endif %}
+{%- if ra_config.get('max_advertisement_interval') %}
+            max-advertisement-interval {{ ra_config.max_advertisement_interval }};
+{%- endif %}
+        }
+{%- endfor %}
+{%- if not config_context.get('protocols', {}).get('router_advertisement') %}
+        interface fxp0.0 {
+            managed-configuration;
+        }
+{%- endif %}
+    }
+{%- else %}
+    router-advertisement {
+        interface fxp0.0 {
+            managed-configuration;
+        }
+    }
+{%- endif %}
+{%- if config_context.get('protocols', {}).get('bgp') %}
+    bgp {
+{%- for neighbor in config_context.protocols.bgp.neighbors %}
+        neighbor {{ neighbor.address }} {
+            peer-as {{ neighbor.peer_as }};
+{%- if neighbor.description %}
+            description "{{ neighbor.description }}";
+{%- endif %}
+        }
+{%- endfor %}
+    }
+{%- endif %}
+{%- if config_context.get('protocols', {}).get('ospf') %}
+    ospf {
+{%- for area_id, area_config in config_context.protocols.ospf.areas.items() %}
+        area {{ area_id }} {
+{%- for interface in area_config.interfaces %}
+            interface {{ interface.name }} {
+{%- if interface.metric %}
+                metric {{ interface.metric }};
+{%- endif %}
+{%- if interface.hello_interval %}
+                hello-interval {{ interface.hello_interval }};
+{%- endif %}
+            }
+{%- endfor %}
+        }
+{%- endfor %}
+    }
+{%- endif %}
+{%- if config_context.get('protocols', {}).get('lldp') %}
+    lldp {
+{%- for interface in config_context.protocols.lldp.interfaces %}
+        interface {{ interface }};
+{%- endfor %}
+    }
+{%- endif %}
+}

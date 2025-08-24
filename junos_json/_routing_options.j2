@@ -1,0 +1,22 @@
+routing-options {
+{%- if config_context.get('routing_options', {}).get('static') or config_context.get('static_routes') %}
+    static {
+{%- for route in config_context.get('routing_options', {}).get('static', config_context.get('static_routes', [])) %}
+        route {{ route.destination }} next-hop {{ route.next_hop }};
+{%- endfor %}
+{%- if not config_context.get('routing_options', {}).get('static') and not config_context.get('static_routes') %}
+        route 0.0.0.0/0 next-hop 192.168.0.3;
+{%- endif %}
+    }
+{%- else %}
+    static {
+        route 0.0.0.0/0 next-hop 192.168.0.3;
+    }
+{%- endif %}
+{%- if config_context.get('routing_options', {}).get('autonomous_system') %}
+    autonomous-system {{ config_context.routing_options.autonomous_system }};
+{%- endif %}
+{%- if config_context.get('routing_options', {}).get('router_id') %}
+    router-id {{ config_context.routing_options.router_id }};
+{%- endif %}
+}
