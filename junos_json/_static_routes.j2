@@ -1,0 +1,19 @@
+{% if config_context.get("static_routes") %}
+"static": {
+  "route": [
+    {% for route in config_context.get("static_routes", []) %}
+    {
+      "name": "{{ route.get('destination', '0.0.0.0/0') }}",
+      {% if route.get("next_hop") %}
+      "next-hop": "{{ route.next_hop }}",
+      {% endif %}
+      {% if route.get("metric") %}
+      "metric": {{ route.metric }},
+      {% endif %}
+      {% if route.get("preference") %}
+      "preference": {{ route.preference }}
+      {% endif %}
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+}{% endif %}

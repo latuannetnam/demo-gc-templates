@@ -1,0 +1,29 @@
+"login": {
+  "user": [
+    {% if config_context.get("users") %}
+    {% for user in config_context.users %}
+    {
+      "name": "{{ user.username }}",
+      "uid": {{ user.uid | default(2000) }},
+      "class": "{{ user.class | default('super-user') }}",
+      "authentication": {
+        {% if user.password %}
+        "encrypted-password": "{{ user.password }}"
+        {% else %}
+        "encrypted-password": "$6$HpfB9N/q$TsnOU69fgDoH0selFOCJ6S/VhKXX6RdfYxr7TOtufDHColTaAT71ji9ReQKOB4mlHMySDpUWlzArR1qfgclPZ/"
+        {% endif %}
+      }
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+    {% else %}
+    {
+      "name": "admin",
+      "uid": 2000,
+      "class": "super-user",
+      "authentication": {
+        "encrypted-password": "$6$HpfB9N/q$TsnOU69fgDoH0selFOCJ6S/VhKXX6RdfYxr7TOtufDHColTaAT71ji9ReQKOB4mlHMySDpUWlzArR1qfgclPZ/"
+      }
+    }
+    {% endif %}
+  ]
+}

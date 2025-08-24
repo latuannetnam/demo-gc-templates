@@ -1,0 +1,8 @@
+"protocols": {
+  {% if config_context.get("bgp") %}
+  {% include './junos_json/_bgp.j2' %}{% if config_context.get('lldp') %},{% endif %}
+  {% endif %}
+  {% if config_context.get('lldp') == true %}
+  {% include './junos_json/_lldp.j2' %}
+  {% endif %}
+}

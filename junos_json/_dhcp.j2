@@ -1,0 +1,37 @@
+"dhcp-local-server": {
+  {% if config_context.get("dhcp", {}).get("pools") %}
+  "group": [
+    {% for pool in config_context.dhcp.pools %}
+    {
+      "name": "{{ pool.get('name', 'default-pool') }}",
+      "interface": "{{ pool.get('interface', 'fxp0.0') }}",
+      "pool": {
+        "name": "{{ pool.get('pool_name', pool.get('name', 'default-pool')) }}",
+        "address-range": {
+          "low": "{{ pool.get('start_ip', '192.168.1.100') }}",
+          "high": "{{ pool.get('end_ip', '192.168.1.200') }}"
+        },
+        {% if pool.get("gateway") %}
+        "router": "{{ pool.gateway }}",
+        {% endif %}
+        {% if pool.get("dns_servers") %}
+        "name-server": [
+          {% for dns in pool.dns_servers %}
+          "{{ dns }}"{% if not loop.last %},{% endif %}
+          {% endfor %}
+        ],
+        {% endif %}
+        "lease-time": {{ pool.get('lease_time', 86400) }}
+      }
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+  {% else %}
+  "group": [
+    {
+      "name": "default-group",
+      "interface": "fxp0.0"
+    }
+  ]
+  {% endif %}
+}

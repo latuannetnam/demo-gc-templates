@@ -1,0 +1,26 @@
+"snmp": {
+  "view": {
+    "name": "system-include",
+    "oid": ".1",
+    "include": {}
+  },
+  {% if config_context.get("snmp") %}
+  "community": [
+    {% for community in config_context.get("snmp", []) %}
+    {
+      "name": "{{ community.get('name', '') }}",
+      "view": "system-include",
+      "authorization": "{{ community.get('role', 'read-only') }}"
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+  {% else %}
+  "community": [
+    {
+      "name": "public",
+      "view": "system-include",
+      "authorization": "read-only"
+    }
+  ]
+  {% endif %}
+}

@@ -1,0 +1,26 @@
+"interfaces": {
+  "interface": [
+    {% set interface_count = namespace(value=0) %}
+    {% for interface in interfaces %}
+    {% if 'ge-' in interface["name"] %}
+    {% if interface_count.value > 0 %},{% endif %}
+    {% include "./junos_json/_physical_interface.j2" %}
+    {% set interface_count.value = interface_count.value + 1 %}
+    {% endif %}
+    {% endfor %}
+    {% for interface in interfaces %}
+    {% if 'fxp' in interface["name"] %}
+    {% if interface_count.value > 0 %},{% endif %}
+    {% include "./junos_json/_management_interface.j2" %}
+    {% set interface_count.value = interface_count.value + 1 %}
+    {% endif %}
+    {% endfor %}
+    {% for interface in interfaces %}
+    {% if 'lo' in interface["name"] %}
+    {% if interface_count.value > 0 %},{% endif %}
+    {% include "./junos_json/_loopback_interface.j2" %}
+    {% set interface_count.value = interface_count.value + 1 %}
+    {% endif %}
+    {% endfor %}
+  ]
+}

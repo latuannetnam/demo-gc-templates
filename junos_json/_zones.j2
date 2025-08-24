@@ -1,0 +1,53 @@
+"zones": {
+  "security-zone": [
+    {% for zone in config_context.security.zones %}
+    {
+      "name": "{{ zone.get('name', 'default-zone') }}",
+      {% if zone.get("description") %}
+      "description": "{{ zone.description }}",
+      {% endif %}
+      {% if zone.get("interfaces") %}
+      "interfaces": [
+        {% for interface in zone.interfaces %}
+        {
+          "name": "{{ interface.get('name') }}",
+          {% if interface.get("host_inbound_traffic") %}
+          "host-inbound-traffic": {
+            "system-services": [
+              {% for service in interface.host_inbound_traffic.get("services", []) %}
+              "{{ service }}"{% if not loop.last %},{% endif %}
+              {% endfor %}
+            ],
+            "protocols": [
+              {% for protocol in interface.host_inbound_traffic.get("protocols", []) %}
+              "{{ protocol }}"{% if not loop.last %},{% endif %}
+              {% endfor %}
+            ]
+          }
+          {% endif %}
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ],
+      {% endif %}
+      {% if zone.get("address_book") %}
+      "address-book": {
+        "address": [
+          {% for address in zone.address_book %}
+          {
+            "name": "{{ address.name }}",
+            "ip-prefix": "{{ address.get('ip_prefix', '0.0.0.0/0') }}"
+          }{% if not loop.last %},{% endif %}
+          {% endfor %}
+        ]
+      },
+      {% endif %}
+      {% if zone.get("tcp_rst") %}
+      "tcp-rst": {},
+      {% endif %}
+      {% if zone.get("application_tracking") %}
+      "application-tracking": {}
+      {% endif %}
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+}

@@ -1,0 +1,28 @@
+{% if config_context.get("ospf") %}
+"ospf": {
+  "area": [
+    {% for area in config_context.get("ospf", {}).get("areas", []) %}
+    {
+      "name": "{{ area.get('area_id', '0.0.0.0') }}",
+      {% if area.get("interfaces") %}
+      "interface": [
+        {% for interface in area.interfaces %}
+        {
+          "name": "{{ interface.name }}",
+          {% if interface.get("cost") %}
+          "metric": {{ interface.cost }},
+          {% endif %}
+          {% if interface.get("hello_interval") %}
+          "hello-interval": {{ interface.hello_interval }},
+          {% endif %}
+          {% if interface.get("dead_interval") %}
+          "dead-interval": {{ interface.dead_interval }}
+          {% endif %}
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+      {% endif %}
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+}{% endif %}

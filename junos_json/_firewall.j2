@@ -1,0 +1,49 @@
+"firewall": {
+  {% if config_context.security.firewall.get("filters") %}
+  "filter": [
+    {% for filter in config_context.security.firewall.filters %}
+    {
+      "name": "{{ filter.get('name', 'default-filter') }}",
+      {% if filter.get("terms") %}
+      "term": [
+        {% for term in filter.terms %}
+        {
+          "name": "{{ term.get('name', 'term-' ~ loop.index) }}",
+          {% if term.get("from") %}
+          "from": {
+            {% if term.from.get("source_address") %}
+            "source-address": [
+              {% for addr in term.from.source_address %}
+              "{{ addr }}"{% if not loop.last %},{% endif %}
+              {% endfor %}
+            ],
+            {% endif %}
+            {% if term.from.get("destination_address") %}
+            "destination-address": [
+              {% for addr in term.from.destination_address %}
+              "{{ addr }}"{% if not loop.last %},{% endif %}
+              {% endfor %}
+            ],
+            {% endif %}
+            {% if term.from.get("protocol") %}
+            "protocol": "{{ term.from.protocol }}",
+            {% endif %}
+            {% if term.from.get("port") %}
+            "port": "{{ term.from.port }}"
+            {% endif %}
+          },
+          {% endif %}
+          {% if term.get("then") %}
+          "then": {
+            "{{ term.then.get('action', 'accept') }}": {}
+          }
+          {% endif %}
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+      {% endif %}
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+  {% endif %}
+}

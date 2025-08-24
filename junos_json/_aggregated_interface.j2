@@ -1,0 +1,40 @@
+{
+  "name": "{{ interface['name'] }}",
+  {% if interface["description"] | length > 1 %}
+  "description": "{{ interface['description'] }}",
+  {% endif %}
+  {% if interface["enabled"] == false %}
+  "disable": {},
+  {% endif %}
+  "aggregated-ether-options": {
+    "link-speed": "1g",
+    "lacp": {
+      "active": {}
+    }
+  },
+  {% if interface["ip_addresses"] | length > 0 %}
+  "unit": {
+    "name": "0",
+    "family": {
+      "inet": {
+        "address": [
+          {% for addr in interface["ip_addresses"] %}
+          {% if addr["address"] is defined %}
+          {
+            "name": "{{ addr['address'] }}"
+          }{% if not loop.last %},{% endif %}
+          {% endif %}
+          {% endfor %}
+        ]
+      }
+    }
+  }
+  {% else %}
+  "unit": {
+    "name": "0",
+    "family": {
+      "inet": {}
+    }
+  }
+  {% endif %}
+}

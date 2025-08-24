@@ -1,0 +1,11 @@
+"services": {
+  {% if snmp is defined %}
+  {% include './junos_json/_snmp.j2' %}{% if config_context.get("dhcp") or config_context.get("web_management") %},{% endif %}
+  {% endif %}
+  {% if config_context.get("dhcp") %}
+  {% include './junos_json/_dhcp.j2' %}{% if config_context.get("web_management") %},{% endif %}
+  {% endif %}
+  {% if config_context.get("web_management") %}
+  {% include './junos_json/_web_management.j2' %}
+  {% endif %}
+}

@@ -1,0 +1,23 @@
+"web-management": {
+  {% if config_context.get("web_management", {}).get("https") %}
+  "https": {
+    {% if config_context.web_management.https.get("port") %}
+    "port": {{ config_context.web_management.https.port }},
+    {% endif %}
+    {% if config_context.web_management.https.get("interface") %}
+    "interface": "{{ config_context.web_management.https.interface }}",
+    {% endif %}
+    "local-certificate": "{{ config_context.web_management.https.get('certificate', 'junos-default') }}"
+  }{% if config_context.get("web_management", {}).get("http") %},{% endif %}
+  {% endif %}
+  {% if config_context.get("web_management", {}).get("http") %}
+  "http": {
+    {% if config_context.web_management.http.get("port") %}
+    "port": {{ config_context.web_management.http.port }},
+    {% endif %}
+    {% if config_context.web_management.http.get("interface") %}
+    "interface": "{{ config_context.web_management.http.interface }}"
+    {% endif %}
+  }
+  {% endif %}
+}

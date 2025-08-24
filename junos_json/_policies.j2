@@ -1,0 +1,100 @@
+"policies": {
+  {% if config_context.security.policies.get("global") %}
+  "global": {
+    "policy": [
+      {% for policy in config_context.security.policies.global %}
+      {
+        "name": "{{ policy.get('name', 'global-policy-' ~ loop.index) }}",
+        {% if policy.get("match") %}
+        "match": {
+          {% if policy.match.get("source_address") %}
+          "source-address": [
+            {% for addr in policy.match.source_address %}
+            "{{ addr }}"{% if not loop.last %},{% endif %}
+            {% endfor %}
+          ],
+          {% endif %}
+          {% if policy.match.get("destination_address") %}
+          "destination-address": [
+            {% for addr in policy.match.destination_address %}
+            "{{ addr }}"{% if not loop.last %},{% endif %}
+            {% endfor %}
+          ],
+          {% endif %}
+          {% if policy.match.get("application") %}
+          "application": [
+            {% for app in policy.match.application %}
+            "{{ app }}"{% if not loop.last %},{% endif %}
+            {% endfor %}
+          ]
+          {% endif %}
+        },
+        {% endif %}
+        {% if policy.get("then") %}
+        "then": {
+          "{{ policy.then.get('action', 'permit') }}": {},
+          {% if policy.then.get("log") %}
+          "log": {
+            "session-init": {}
+          }
+          {% endif %}
+        }
+        {% endif %}
+      }{% if not loop.last %},{% endif %}
+      {% endfor %}
+    ]
+  }{% if config_context.security.policies.get("from_zone_to_zone") %},{% endif %}
+  {% endif %}
+  {% if config_context.security.policies.get("from_zone_to_zone") %}
+  "from-zone-to-zone": [
+    {% for zone_policy in config_context.security.policies.from_zone_to_zone %}
+    {
+      "source-zone": "{{ zone_policy.get('source_zone', 'trust') }}",
+      "destination-zone": "{{ zone_policy.get('destination_zone', 'untrust') }}",
+      "policy": [
+        {% for policy in zone_policy.get("policies", []) %}
+        {
+          "name": "{{ policy.get('name', 'zone-policy-' ~ loop.index) }}",
+          {% if policy.get("match") %}
+          "match": {
+            {% if policy.match.get("source_address") %}
+            "source-address": [
+              {% for addr in policy.match.source_address %}
+              "{{ addr }}"{% if not loop.last %},{% endif %}
+              {% endfor %}
+            ],
+            {% endif %}
+            {% if policy.match.get("destination_address") %}
+            "destination-address": [
+              {% for addr in policy.match.destination_address %}
+              "{{ addr }}"{% if not loop.last %},{% endif %}
+              {% endfor %}
+            ],
+            {% endif %}
+            {% if policy.match.get("application") %}
+            "application": [
+              {% for app in policy.match.application %}
+              "{{ app }}"{% if not loop.last %},{% endif %}
+              {% endfor %}
+            ]
+            {% endif %}
+          },
+          {% endif %}
+          {% if policy.get("then") %}
+          "then": {
+            "{{ policy.then.get('action', 'permit') }}": {},
+            {% if policy.then.get("log") %}
+            "log": {
+              "session-init": {}
+            }
+            {% endif %}
+          }
+          {% endif %}
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+  {% endif %}
+}
